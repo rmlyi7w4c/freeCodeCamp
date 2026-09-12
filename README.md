@@ -1,16 +1,24 @@
-# freeCodeCamp
+version: '3.8'
 
-freeCodeCamp is a free, open-source platform to help you learn to code by building real-world projects.
+services:
+  db:
+    image: mongo:6.0
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
-## Getting Started
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    ports:
+      - '1025:1025'
+      - '8025:8025'
 
-- Visit [freeCodeCamp.org](https://www.freecodecamp.org) to start learning.
-- This repository contains the source code for the curriculum and platform.
-
-## Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## License
-
-This project is licensed under the BSD-3-Clause license. See [LICENSE](LICENSE) for details.
+volumes:
+  mongodb_data:
